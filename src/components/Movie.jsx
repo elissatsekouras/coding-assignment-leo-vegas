@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import starredSlice from '../data/starredSlice'
 import watchLaterSlice from '../data/watchLaterSlice'
 import placeholder from '../assets/not-found-500X750.jpeg'
+import { useCallback, useState } from 'react'
 
 const Movie = ({ movie, viewTrailer }) => {
 
@@ -9,17 +10,26 @@ const Movie = ({ movie, viewTrailer }) => {
     const watchLaterList = useSelector((state) => state.watchLater.watchLaterMovies)
     const { starMovie, unstarMovie } = starredSlice.actions
     const { addToWatchLater, removeFromWatchLater } = watchLaterSlice.actions
+    const [isOpen, setOpen] = useState(false);
 
     const dispatch = useDispatch()
 
     const onCloseCard = (e) => {
-        e.stopPropagation()    
-        e.target.parentElement.parentElement.classList.remove('opened')
+        e.stopPropagation() 
+        setOpen(false);
     }
+
+    const onOpenCard = useCallback(() => {
+        setOpen(true)
+    })
 
     return (
         <div className="wrapper col-3 col-sm-4 col-md-3 col-lg-3 col-xl-2">
-        <div className="card" onClick={(e) => e.currentTarget.classList.add('opened')} >
+        <div 
+            className={`card ${isOpen && 'opened'}`}
+            role='button'
+            onClick={onOpenCard}
+        >
             <div className="card-body text-center">
                 <div className="overlay" />
                 <div className="info_panel">
