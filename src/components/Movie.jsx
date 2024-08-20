@@ -12,10 +12,8 @@ const Movie = ({ movie, viewTrailer }) => {
 
     const dispatch = useDispatch()
 
-    const myClickHandler = (e) => {
-        if (!e) var e = window.event
-        e.cancelBubble = true
-        if (e.stopPropagation) e.stopPropagation()
+    const onCloseCard = (e) => {
+        e.stopPropagation()    
         e.target.parentElement.parentElement.classList.remove('opened')
     }
 
@@ -61,7 +59,7 @@ const Movie = ({ movie, viewTrailer }) => {
             </div>
             <h6 className="title mobile-card">{movie.title}</h6>
             <h6 className="title">{movie.title}</h6>
-            <button type="button" className="close" onClick={(e) => myClickHandler(e)} aria-label="Close">
+            <button type="button" className="close" onClick={(e) => onCloseCard(e)} aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
