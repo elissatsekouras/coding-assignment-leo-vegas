@@ -6,17 +6,16 @@ import '../styles/starred.scss'
 
 const WatchLater = ({viewTrailer}) => {
 
-    const state = useSelector((state) => state)
-    const { watchLater } = state
+    const watchLaterList = useSelector((state) => state.watchLater.watchLaterMovies)
     const { remveAllWatchLater } = watchLaterSlice.actions
     const dispatch = useDispatch()
 
   return (
     <div className="starred" data-testid="watch-later-div">
-      {watchLater.watchLaterMovies.length > 0 && (<div data-testid="watch-later-movies" className="starred-movies">
+      {watchLaterList.length > 0 && (<div data-testid="watch-later-movies" className="starred-movies">
         <h6 className="header">Watch Later List</h6>
         <div className="row">
-        {watchLater.watchLaterMovies.map((movie) => (
+        {watchLaterList.map((movie) => (
           <Movie 
             movie={movie} 
             key={movie.id}
@@ -30,7 +29,7 @@ const WatchLater = ({viewTrailer}) => {
         </footer>
       </div>)}
 
-      {watchLater.watchLaterMovies.length === 0 && (<div className="text-center empty-cart">
+      {watchLaterList.length === 0 && (<div className="text-center empty-cart">
         <i className="bi bi-heart" />
         <p>You have no movies saved to watch later.</p>
         <p>Go to <Link to='/'>Home</Link></p>
