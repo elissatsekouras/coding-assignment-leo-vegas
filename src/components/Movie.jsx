@@ -3,12 +3,14 @@ import starredSlice from '../data/starredSlice'
 import watchLaterSlice from '../data/watchLaterSlice'
 import placeholder from '../assets/not-found-500X750.jpeg'
 import { useCallback, useState } from 'react'
+import trailerSlice from '../data/trailerSlice'
 
-const Movie = ({ movie, viewTrailer, isStarred, isOnWatchList }) => {
+const Movie = ({ movie, isStarred, isOnWatchList }) => {
 
     const { starMovie, unstarMovie } = starredSlice.actions
     const { addToWatchLater, removeFromWatchLater } = watchLaterSlice.actions
     const [isOpen, setOpen] = useState(false);
+    const { setCurrentMovieId } = trailerSlice.actions;
 
     const dispatch = useDispatch()
 
@@ -19,6 +21,10 @@ const Movie = ({ movie, viewTrailer, isStarred, isOnWatchList }) => {
 
     const onOpenCard = useCallback(() => {
         setOpen(true)
+    })
+
+    const onViewTrailer = useCallback((movie) => {
+        dispatch(setCurrentMovieId(movie.id));
     })
 
     return (
@@ -47,7 +53,7 @@ const Movie = ({ movie, viewTrailer, isStarred, isOnWatchList }) => {
                     ) : (
                         <button type="button" data-testid="watch-later" className="btn btn-light btn-watch-later" onClick={() => dispatch(addToWatchLater(movie))}>Watch Later</button>
                     )}
-                    <button type="button" className="btn btn-dark" onClick={() => viewTrailer(movie)}>View Trailer</button>                                                
+                    <button type="button" className="btn btn-dark" onClick={() => onViewTrailer(movie)}>View Trailer</button>                                                
                 </div>
                 <img className="center-block" src={(movie.poster_path) ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : placeholder} alt="Movie poster" />
             </div>

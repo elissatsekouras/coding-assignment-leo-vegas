@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import '../styles/movies.scss'
 import { useMemo } from 'react';
 
-const Movies = ({ viewTrailer }) => {
+const Movies = () => {
     const movies = useSelector((state) => state.movies);
     const starredList = useSelector((state) => state.starred.starredMovies);
     const watchLaterList = useSelector((state) => state.watchLater.watchLaterMovies);
@@ -26,7 +26,6 @@ const Movies = ({ viewTrailer }) => {
                     <Movie 
                         movie={movie} 
                         key={movie.id}
-                        viewTrailer={viewTrailer}
                         isStarred={starredIds.includes(movie.id)}
                         isOnWatchList={watchLaterIds.includes(movie.id)}
                     />
