@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route, createSearchParams, useSearchParams, useNavigate } from "react-router-dom"
+import { useCallback, useEffect, useState } from 'react'
+import { Routes, Route, useSearchParams } from "react-router-dom"
 import { useDispatch } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
 import { fetchMovies } from './data/moviesSlice'
@@ -17,30 +17,18 @@ const App = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = searchParams.get('search')
   const [videoKey, setVideoKey] = useState()
-  const navigate = useNavigate()
 
-  const getSearchResults = (query) => {
-    if (query !== '') {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+query))
-      setSearchParams(createSearchParams({ search: query }))
+  useEffect(() => {
+    getMovies(searchQuery)
+  }, [searchQuery]);
+
+  const getMovies = useCallback((searchQuery) => {
+    if (searchQuery && searchQuery.trim().length > 0) {
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + searchQuery));
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER))
-      setSearchParams()
+      dispatch(fetchMovies(ENDPOINT_DISCOVER));
     }
-  }
-
-  const searchMovies = (query) => {
-    navigate('/')
-    getSearchResults(query)
-  }
-
-  const getMovies = () => {
-    if (searchQuery) {
-        dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+searchQuery))
-    } else {
-        dispatch(fetchMovies(ENDPOINT_DISCOVER))
-    }
-  }
+  }, []);
 
   const viewTrailer = (movie) => {
     getMovie(movie.id)
@@ -59,13 +47,9 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    getMovies()
-  }, [])
-
   return (
     <div className="App">
-      <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
+      <Header />
 
       <div className="container">
         {videoKey ? (
