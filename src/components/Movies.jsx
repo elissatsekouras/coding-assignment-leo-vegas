@@ -17,7 +17,10 @@ const Movies = ({ viewTrailer }) => {
     }, [watchLaterList])
 
     return (
-        <div data-testid="movies">
+        <div 
+            data-testid="movies" 
+            className="movie-grid"
+        >
             {movies.movies.results?.map((movie) => {
                 return (
                     <Movie 

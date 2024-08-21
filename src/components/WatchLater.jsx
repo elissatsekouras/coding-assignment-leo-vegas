@@ -14,7 +14,7 @@ const WatchLater = ({viewTrailer}) => {
     <div className="starred" data-testid="watch-later-div">
       {watchLaterList.length > 0 && (<div data-testid="watch-later-movies" className="starred-movies">
         <h6 className="header">Watch Later List</h6>
-        <div className="row">
+        <div className="movie-grid">
         {watchLaterList.map((movie) => (
           <Movie 
             movie={movie} 
