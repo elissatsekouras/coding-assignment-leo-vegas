@@ -1,41 +1,17 @@
-import { useCallback, useEffect } from 'react'
 import { Routes, Route, useSearchParams } from "react-router-dom"
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
-import { fetchMovies } from './data/moviesSlice'
-import { ENDPOINT_SEARCH, ENDPOINT_DISCOVER } from './constants'
 import Header from './components/Header'
-import Movies from './components/Movies'
 import Starred from './components/Starred'
 import WatchLater from './components/WatchLater'
 import './app.scss'
 import TrailerModal from './components/TrailerModal'
+import Discover from './components/Discover'
 
 const App = () => {
-
-  const dispatch = useDispatch()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const searchQuery = searchParams.get('search')
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search');
   const currentMovieId = useSelector((state) => state.trailer.currentMovieId);
-  const page  = useSelector((state) => state.movies.page);
-
-  useEffect(() => {
-    getMovies(searchQuery)
-  }, [searchQuery]);
-
-  const getMovies = useCallback((searchQuery, page = 1) => {
-    if (searchQuery && searchQuery.trim().length > 0) {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&page=${page}&query=` + searchQuery));
-    } else {
-      dispatch(fetchMovies(`${ENDPOINT_DISCOVER}&page=${page}`));
-    }
-  }, []);
-
-  const loadMoreMovies = useCallback((entries) => {
-    if (entries[0].isIntersecting) {
-      getMovies(searchQuery, page + 1);
-    }
-  }, [searchQuery, page])
 
   return (
     <div className="App">
@@ -43,7 +19,7 @@ const App = () => {
 
       <div className="container">
         <Routes>
-          <Route path="/" element={<Movies loadMoreMovies={loadMoreMovies}/>} />
+          <Route path="/" element={<Discover searchQuery={searchQuery} />} />
           <Route path="/starred" element={<Starred />} />
           <Route path="/watch-later" element={<WatchLater />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />
