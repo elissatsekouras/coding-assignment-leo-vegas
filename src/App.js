@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Routes, Route, useSearchParams } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
@@ -17,18 +17,25 @@ const App = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = searchParams.get('search')
   const currentMovieId = useSelector((state) => state.trailer.currentMovieId);
+  const page  = useSelector((state) => state.movies.page);
 
   useEffect(() => {
     getMovies(searchQuery)
   }, [searchQuery]);
 
-  const getMovies = useCallback((searchQuery) => {
+  const getMovies = useCallback((searchQuery, page = 1) => {
     if (searchQuery && searchQuery.trim().length > 0) {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + searchQuery));
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&page=${page}&query=` + searchQuery));
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER));
+      dispatch(fetchMovies(`${ENDPOINT_DISCOVER}&page=${page}`));
     }
   }, []);
+
+  const loadMoreMovies = useCallback((entries) => {
+    if (entries[0].isIntersecting) {
+      getMovies(searchQuery, page + 1);
+    }
+  }, [searchQuery, page])
 
   return (
     <div className="App">
@@ -36,7 +43,7 @@ const App = () => {
 
       <div className="container">
         <Routes>
-          <Route path="/" element={<Movies />} />
+          <Route path="/" element={<Movies loadMoreMovies={loadMoreMovies}/>} />
           <Route path="/starred" element={<Starred />} />
           <Route path="/watch-later" element={<WatchLater />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />
